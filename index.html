@@ -8,6 +8,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <!-- Pré-carregamento de recursos -->
+    <link rel="preload" href="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3" as="audio">
+    <link rel="preload" href="https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3" as="audio">
+    <link rel="preload" href="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3" as="audio">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" as="style">
     <!-- Audio Elements -->
     <audio id="notificationSound" preload="auto">
         <source src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3" type="audio/mpeg">
@@ -121,6 +127,96 @@
             animation: rubberBand 0.8s;
         }
         
+        /* Glitch effect */
+        .glitch-effect {
+            position: relative;
+        }
+        
+        .glitch-effect:hover::before,
+        .glitch-effect:hover::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: inherit;
+        }
+        
+        .glitch-effect:hover::before {
+            left: 2px;
+            text-shadow: -2px 0 #00f;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 2s infinite linear alternate-reverse;
+        }
+        
+        .glitch-effect:hover::after {
+            left: -2px;
+            text-shadow: -2px 0 #f00;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 2s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); }
+            20% { clip: rect(112px, 9999px, 76px, 0); }
+            40% { clip: rect(75px, 9999px, 107px, 0); }
+            60% { clip: rect(98px, 9999px, 109px, 0); }
+            80% { clip: rect(95px, 9999px, 53px, 0); }
+            100% { clip: rect(31px, 9999px, 113px, 0); }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% { clip: rect(112px, 9999px, 76px, 0); }
+            20% { clip: rect(85px, 9999px, 66px, 0); }
+            40% { clip: rect(106px, 9999px, 71px, 0); }
+            60% { clip: rect(91px, 9999px, 103px, 0); }
+            80% { clip: rect(127px, 9999px, 80px, 0); }
+            100% { clip: rect(79px, 9999px, 85px, 0); }
+        }
+        
+        /* Neon text effect */
+        .neon-text {
+            color: #fff;
+            text-shadow:
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #ff00de,
+                0 0 40px #ff00de,
+                0 0 80px #ff00de;
+            animation: neon-pulse 1.5s infinite alternate;
+        }
+        
+        @keyframes neon-pulse {
+            from {
+                text-shadow:
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #ff00de,
+                    0 0 40px #ff00de,
+                    0 0 80px #ff00de;
+            }
+            to {
+                text-shadow:
+                    0 0 10px #fff,
+                    0 0 20px #fff,
+                    0 0 30px #ff00de,
+                    0 0 50px #ff00de,
+                    0 0 90px #ff00de;
+            }
+        }
+        
+        /* Typing cursor */
+        .typing-cursor {
+            animation: blink 0.7s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
         /* Responsive adjustments */
         @media (max-width: 640px) {
             .text-4xl {
@@ -140,16 +236,24 @@
     </style>
 </head>
 <body class="min-h-screen gradient-bg text-white">
+    <!-- Tela de Carregamento -->
+    <div id="loading-screen" class="fixed inset-0 bg-gradient-to-r from-purple-900 to-blue-800 flex items-center justify-center z-50 transition-opacity duration-500">
+        <div class="text-center">
+            <div class="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-4 mx-auto"></div>
+            <p class="text-white text-xl font-semibold">Preparando sua experiência...</p>
+        </div>
+    </div>
+
     <!-- Particles Background -->
     <div id="particles-js"></div>
     
     <div class="container mx-auto px-4 py-16 flex flex-col items-center justify-center min-h-screen">
-        <div class="max-w-2xl mx-auto text-center fade-in animate__animated animate__fadeIn">
+        <div class="max-w-2xl mx-auto text-center fade-in animate__animated animate__fadeIn" data-aos="fade-up">
             <!-- Confetti Animation -->
             <div class="text-6xl mb-6 float animate__animated animate__bounceIn">🎉</div>
             
-            <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight animate__animated animate__fadeInUp">
-                Parabéns! Você ganhou uma entrada gratuita para o evento <span class="text-yellow-300 animate__animated animate__pulse animate__infinite">Arc4dp</span>!
+            <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight animate__animated animate__fadeInUp typewriter-effect">
+                Parabéns! Você ganhou uma entrada gratuita para o evento <span class="text-yellow-300 animate__animated animate__pulse animate__infinite neon-text">Arc4dp</span>!
             </h1>
             
             <p class="text-xl mb-10 opacity-90 animate__animated animate__fadeInUp animate__delay-1s">
@@ -159,7 +263,7 @@
             
             <div class="flex flex-col md:flex-row gap-4 justify-center animate__animated animate__fadeInUp animate__delay-2s">
                 <!-- Primary CTA Button -->
-                <button id="ctaButton" class="btn-primary pulse bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-5 px-8 rounded-full text-xl flex items-center justify-center mx-auto md:mx-0 mb-4 md:mb-0 btn-hover-effect">
+                <button id="ctaButton" class="btn-primary pulse bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-5 px-8 rounded-full text-xl flex items-center justify-center mx-auto md:mx-0 mb-4 md:mb-0 btn-hover-effect glitch-effect" data-text="Quero garantir minha vaga agora!">
                     <span class="mr-2 bounce-on-hover">🚀</span>
                     Quero garantir minha vaga agora!
                 </button>
@@ -172,19 +276,19 @@
             
             <!-- Trust Indicators -->
             <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm animate__animated animate__fadeInUp animate__delay-3s">
-                <div class="flex flex-col items-center hover:scale-110 transition-transform">
+                <div class="flex flex-col items-center hover:scale-110 transition-transform" data-aos="fade-up" data-aos-delay="100">
                     <div class="text-3xl mb-2">🏆</div>
                     <div>Evento Premiado</div>
                 </div>
-                <div class="flex flex-col items-center hover:scale-110 transition-transform">
+                <div class="flex flex-col items-center hover:scale-110 transition-transform" data-aos="fade-up" data-aos-delay="200">
                     <div class="text-3xl mb-2">👥</div>
                     <div>50+ Participantes</div>
                 </div>
-                <div class="flex flex-col items-center hover:scale-110 transition-transform">
+                <div class="flex flex-col items-center hover:scale-110 transition-transform" data-aos="fade-up" data-aos-delay="300">
                     <div class="text-3xl mb-2">⏳</div>
                     <div>Oferta por tempo limitado</div>
                 </div>
-                <div class="flex flex-col items-center hover:scale-110 transition-transform">
+                <div class="flex flex-col items-center hover:scale-110 transition-transform" data-aos="fade-up" data-aos-delay="400">
                     <div class="text-3xl mb-2">🔒</div>
                     <div>Inscrição segura</div>
                 </div>
@@ -192,9 +296,27 @@
         </div>
     </div>
     
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
+        // Initialize AOS (Animate On Scroll)
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out-quad',
+            once: true
+        });
+
         // Initialize particles.js and sounds
         document.addEventListener('DOMContentLoaded', function() {
+            // Esconder tela de carregamento quando a página estiver pronta
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    document.getElementById('loading-screen').style.opacity = '0';
+                    setTimeout(function() {
+                        document.getElementById('loading-screen').style.display = 'none';
+                    }, 500);
+                }, 1500); // Tempo mínimo de exibição
+            });
+
             // Play notification sound on page load
             const notificationSound = document.getElementById('notificationSound');
             notificationSound.volume = 0.3;
@@ -321,6 +443,26 @@
                 "retina_detect": true
             });
             
+            // Efeito de digitação no título
+            function typeWriter(element, text, i = 0) {
+                if (i < text.length) {
+                    element.innerHTML = text.substring(0, i+1) + '<span class="typing-cursor">|</span>';
+                    setTimeout(() => typeWriter(element, text, i+1), 100);
+                } else {
+                    element.innerHTML = text;
+                }
+            }
+            
+            // Chamar a função de digitação
+            const titleElement = document.querySelector('.typewriter-effect');
+            if (titleElement) {
+                const originalText = titleElement.textContent;
+                titleElement.innerHTML = '';
+                setTimeout(() => {
+                    typeWriter(titleElement, originalText);
+                }, 500);
+            }
+            
             // Add hover effect and sound to buttons
             const ctaButton = document.getElementById('ctaButton');
             const secondaryButton = document.getElementById('secondaryButton');
@@ -378,7 +520,6 @@
                         if (this.id === 'ctaButton') {
                             window.location.href = 'https://arc4dp.netlify.app/#subscrever';
                         } else {
-                            // Here you would normally redirect to event info
                             window.location.href = 'https://arc4dp.netlify.app/';
                         }
                     }, 800);
@@ -399,29 +540,33 @@
             
             // Add animation to confetti emoji on hover
             const confetti = document.querySelector('.text-6xl');
-            confetti.addEventListener('mouseenter', function() {
-                this.classList.add('animate__animated', 'animate__tada');
-                setTimeout(() => {
-                    this.classList.remove('animate__animated', 'animate__tada');
-                }, 1000);
+            if (confetti) {
+                confetti.addEventListener('mouseenter', function() {
+                    this.classList.add('animate__animated', 'animate__tada');
+                    setTimeout(() => {
+                        this.classList.remove('animate__animated', 'animate__tada');
+                    }, 1000);
+                });
+            }
+            
+            // Efeito de parallax
+            window.addEventListener('scroll', function() {
+                const scrolled = window.scrollY;
+                const parallax = document.querySelector('.parallax-element');
+                if (parallax) {
+                    parallax.style.transform = `translateY(${scrolled * 0.3}px)`;
+                }
             });
             
-            // Add scroll animation
-            const animateOnScroll = () => {
-                const elements = document.querySelectorAll('.animate__animated');
-                elements.forEach(element => {
-                    const elementPosition = element.getBoundingClientRect().top;
-                    const screenPosition = window.innerHeight / 1.3;
-                    
-                    if (elementPosition < screenPosition) {
-                        const animation = element.getAttribute('data-animation');
-                        element.classList.add(animation);
-                    }
-                });
-            };
+            // Verificação de dispositivo tátil
+            function isTouchDevice() {
+                return 'ontouchstart' in window || navigator.maxTouchPoints;
+            }
             
-            window.addEventListener('scroll', animateOnScroll);
-            animateOnScroll(); // Run once on load
+            if (isTouchDevice()) {
+                document.body.classList.add('touch-device');
+                // Ajustar comportamentos para dispositivos touch
+            }
         });
     </script>
 </body>
